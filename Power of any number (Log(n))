@@ -1,0 +1,19 @@
+long long power(long long  base, long long pow){
+
+        long long ans = 1;
+
+        while(pow){
+
+            if(pow%2){
+                pow--;
+                ans = (ans%mod*base%mod)%mod;;
+            }
+
+            else{
+                base = (base*base)%mod;
+                pow/=2;
+            }
+
+        }
+        return ans;
+    }

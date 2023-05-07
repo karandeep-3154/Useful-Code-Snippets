@@ -1,0 +1,173 @@
+  int solve(vector<int>& nums,int n,int pre,int cur){
+        
+        if(cur==n)
+            return 0;
+        
+        int include=0;
+        if( pre==-1 || nums[pre]<nums[cur])
+           include = 1 + solve(nums,n,cur,cur+1);
+        
+           int exclude = solve(nums,n,pre,cur+1);
+        
+        return max(include,exclude);
+        
+    }
+    
+    int solveMemo(vector<int>& nums,vector<vector<int>> &dp,int n,int pre,int cur){
+        
+        if(cur==n)
+            return 0;
+        
+        if(dp[cur][pre+1]!=-1)
+            return dp[cur][pre+1];
+        
+        int include=0;
+        if( pre==-1 || nums[pre]<nums[cur])
+           include = 1 + solveMemo(nums,dp,n,cur,cur+1);
+        
+           int exclude = solveMemo(nums,dp,n,pre,cur+1);
+        
+           dp[cur][pre+1] = max(include,exclude);
+        
+        return dp[cur][pre+1];
+        
+    }
+    
+    int solvedp(vector<int>& nums,int n){
+        
+        vector<vector<int>> dp(n+1,vector<int>(n+1,0));
+        
+        for(int i=n-1;i>=0;i--){
+            for(int j=i-1;j>=-1;j--){
+                
+                int include=0;
+                if( j==-1 || nums[j]<nums[i])
+                  include = 1 + dp[i+1][i+1];
+        
+                int exclude = dp[i+1][j+1];
+        
+                 dp[i][j+1] = max(include,exclude);
+            }
+        }
+        return dp[0][0];
+    }
+
+     int solveSpaceOptimal(vector<int>& nums,int n){
+
+            vector<int> next(n+1,0);
+            vector<int> cur(n+1,0);
+        
+        for(int i=n-1;i>=0;i--){
+            for(int j=i-1;j>=-1;j--){
+                
+                int include=0;
+                
+                if( j==-1 || nums[j]<nums[i])
+                  include = 1 + next[i+1];
+        
+                int exclude = next[j+1];
+        
+                cur[j+1] = max(include,exclude);
+            }
+            next=cur;
+        }
+        
+        return next[0];
+    }
+    
+        
+    int solveSpaceOptimal2(vector<int>& nums,int n){
+         
+         vector< int > dp(n,0);
+         
+         dp[n-1]=1;
+         
+         for(int i=n-2;i>=0;i--){
+             
+             int ans=INT_MIN;
+             
+             for(int j=i+1;j<n;j++){
+                 
+                 if(nums[j]>nums[i])
+                 ans=max(ans,dp[j]);
+             }
+         
+         dp[i]=ans==INT_MIN?1:ans+1;
+         
+     }
+        int ans=INT_MIN;
+        
+        for(int i=0;i<n;i++)
+            ans=max(ans,dp[i]);
+        
+        return ans;
+    }
+    
+    int solveOptimalLowerBound(vector<int>& nums,int n){
+        
+        if(!n)
+            return 0;
+        
+        vector<int> ans;
+        ans.push_back(nums[0]);
+        
+        for(int i=1;i<n;i++){
+            
+            if(nums[i]>ans.back())
+                ans.push_back(nums[i]);
+            
+            else{
+                int index=lower_bound(ans.begin(),ans.end(),nums[i])-ans.begin();
+                ans[index]=nums[i];
+        }
+        }
+        return ans.size();
+    }
+    
+    //BELOW CODE IS BY USING UPPERBOUND IN WHICH WE DID SOME CHANGES SUCH AS ALREADY DECLARING AND INITIALISING A LIS ARRAY WITH 1E9 AND LIS[0] = -1E9
+    TO ACHIEVE LOWER BOUND FUNCTIONALITY
+    //FOR MORE CLARITY JUST RUN TESTCASE FOR NUMS = {7,7,7} WITH ABOVE LOWER BOUND CODE AND REPLACING LOWERBOUND WITH UPPERBOUND IN ABOVE CODE 
+    THEN YOU WILL FEEL THE NEED FOR BELOW CHANGES.
+     
+    int solveOptimalUpperBound(vector<int>& a) {
+    
+    int n = a.size();
+    
+    const int INF = 1e9;
+    vector<int> d(n+1, INF);
+    d[0] = -INF;
+
+    for (int i = 0; i < n; i++) {
+        int l = upper_bound(d.begin(), d.end(), a[i]) - d.begin();
+        if (d[l-1] < a[i] && a[i] < d[l])
+            d[l] = a[i];
+    }
+
+    int ans = 0;
+    for (int l = 0; l <= n; l++) {
+        if (d[l] < INF)
+            ans = l;
+    }
+    return ans;
+
+    }
+
+    
+    int lengthOfLIS(vector<int>& nums) {
+    
+        //return solve(nums,nums.size(),-1,0);
+        
+        //vector<vector<int>> dp(nums.size(),vector<int>(nums.size()+1,-1));
+        
+        //return solveMemo(nums,dp,nums.size(),-1,0);
+        
+        // return solvedp(nums,nums.size());
+        
+        //return solveSpaceOptimal2(nums,nums.size());
+        
+        //return solveSpaceOptimal(nums,nums.size());   
+        
+        //return solveOptimalLowerBound(nums,nums.size());
+        
+        //return solveOptimalUpperBound(nums,nums.size());
+    }

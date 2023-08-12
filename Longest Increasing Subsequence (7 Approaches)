@@ -102,7 +102,8 @@
         
         return ans;
     }
-    
+    //FOR Longest Decreasing Subsequence, MULTIPLY EAACH ELEMENT WITH -1 OR REVERSE ARRAY AND FIND LIS.
+
     int solveOptimalLowerBound(vector<int>& nums,int n){
         
         if(!n)

@@ -1,0 +1,19 @@
+int kadane(vector<int>& v, int n){
+        
+        int curs=0, s=0;
+        
+        for(auto i : v){
+            
+            curs+=i;
+            
+            s = max(s, curs);
+            
+            if(curs<0)
+            curs=0;
+            
+        }
+        
+        return s;
+        
+    }
+  

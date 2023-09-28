@@ -1,0 +1,94 @@
+
+//https://ideone.com/adNVCN
+
+#include <bits/stdc++.h>
+using namespace std;
+
+void construct(vector<int>& arr, vector<int>& tree, int start, int end, int ind){
+	
+	if(start == end){
+		
+		tree[ind] = arr[start];
+		return;
+		
+	}
+	
+	int mid = (start + end)/2;
+	
+	construct(arr, tree, start, mid, 2*ind+1);
+	construct(arr, tree, mid+1, end, 2*ind+2);
+	
+	tree[ind] = tree[2*ind+1] + tree[2*ind+2];
+	
+}
+
+void update(vector<int> &arr, vector<int> &tree, int start, int end, int ind, int index, int value){
+	
+	//ind is the index at which calculated answer for interval start->end is stored and index is that index at which value of array is to be updated 
+	
+	if(start == end){
+		
+		arr[index] = value;
+		tree[ind] = value;
+		return;
+		
+	}
+	
+	int mid = (start + end)/2;
+	
+	if(index<=mid)
+	update(arr, tree, start, mid, 2*ind+1, index, value);
+	
+	else
+	update(arr, tree, mid+1, end, 2*ind+2, index, value);
+	
+	tree[ind] = tree[2*ind+1] + tree[2*ind+2];
+	
+	
+}
+
+int query(vector<int>& tree, int start, int end, int ind, int left, int right){
+	
+	//Case 1 : When current interval is outside left->right range
+	
+	if(start>right or end<left)
+	return 0;
+	
+	//Case 2 : When current interval is part of left->right range, then return
+    // the sum of the segment
+	
+	if(start>=left and end<=right)
+	return tree[ind];
+	
+	//Case 3 : Overlapping
+	
+	int mid = (start + end)/2;
+	
+	return query(tree, start, mid, 2*ind+1, left, right) + query(tree, mid+1, end, 2*ind+2, left, right);
+	
+}
+
+int main() {
+	
+	int n;cin>>n;
+	
+	vector<int> arr(n);
+	for(int i=0;i<n;i++)
+	cin>>arr[i];
+	
+	vector<int> tree(4*n);
+	
+	construct(arr, tree, 0, n-1, 0);
+	
+	int index,value;
+	cin>>index>>value;
+	
+	update(arr, tree, 0, n-1, 0, index, value);
+	
+	// for(int i=0;i<4*n;i++)cout<<tree[i]<<endl;
+	
+	int left, right;
+	cin>>left>>right;
+	
+	cout<<query(tree, 0, n-1, 0, left, right);
+}

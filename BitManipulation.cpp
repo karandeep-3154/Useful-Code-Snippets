@@ -21,7 +21,7 @@ void precode(){
 
 string convertToBinary(int n){
 
-    //TC = SC(size of binary string will be no. of digits so, nlogn) = O(Log n)
+    //TC = SC(size of binary string will be no. of digits so, logn) = O(Log n)
 
     string binary = "";
 
